@@ -3,38 +3,36 @@ import 'package:provider/provider.dart';
 import 'package:shop/components/product_item.dart';
 import 'package:shop/models/product.dart';
 import 'package:shop/models/product_list.dart';
+import 'package:shop/models/product_sort.dart';
 
 class ProductGrid extends StatelessWidget {
-  final bool showFavoriteOnly;
-  final bool showIgnoredOnly;
-  final bool isSortedByPrice;
-  final bool isSortedByName;
-  final bool isAscending;
 
-  const ProductGrid(this.showFavoriteOnly, this.showIgnoredOnly, this.isSortedByPrice, this.isSortedByName, this.isAscending, {Key? key}) : super(key: key);
+
+  const ProductGrid({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final sortProvider = Provider.of<ProductSort>(context);
     final provider = Provider.of<ProductList>(context);
     List<Product> loadedProducts;
-    if (showIgnoredOnly) {
+    if (sortProvider.showIgnoredOnly) {
       loadedProducts = provider.ignoredItems;
-    } else if (showFavoriteOnly) {
+    } else if (sortProvider.showFavoriteOnly) {
       loadedProducts = provider.favoriteItems;
     } else {
       loadedProducts = provider.items;
     }
-    
-    if(isSortedByName){
-      if(isAscending){
+
+    if (sortProvider.isSortedByName) {
+      if (sortProvider.isAscending) {
         loadedProducts.sort((a, b) => a.name.compareTo(b.name));
       } else {
         loadedProducts.sort((a, b) => b.name.compareTo(a.name));
       }
     }
 
-    if(isSortedByPrice){
-      if(isAscending){
+    if (sortProvider.isSortedByPrice) {
+      if (sortProvider.isAscending) {
         loadedProducts.sort((a, b) => a.price.compareTo(b.price));
       } else {
         loadedProducts.sort((a, b) => b.price.compareTo(a.price));

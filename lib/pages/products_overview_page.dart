@@ -4,21 +4,9 @@ import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/badgee.dart';
 import 'package:shop/components/product_grid.dart';
 import 'package:shop/models/cart.dart';
+import 'package:shop/models/product_sort.dart';
 import 'package:shop/utils/app_routes.dart';
 
-enum FilterOptions {
-  favorite,
-  all,
-  ignored,
-
-}
-
-enum SortOptions {
-  price,
-  name,
-  ascending,
-  descending,
-}
 
 class ProductsOverviewPage extends StatefulWidget {
   const ProductsOverviewPage({Key? key}) : super(key: key);
@@ -28,14 +16,10 @@ class ProductsOverviewPage extends StatefulWidget {
 }
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
-  bool _showFavoriteOnly = false;
-  bool _showIgnoredOnly = false;
-  bool _isAscending = true;
-  bool _isSortedByPrice = false;
-  bool _isSortedByName = false;
 
   @override
   Widget build(BuildContext context) {
+    final sortProvider = Provider.of<ProductSort>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Minha Loja'),
@@ -55,9 +39,9 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             onSelected: (SortOptions selectedValue) {
               setState(() {
                 if (selectedValue == SortOptions.ascending) {
-                  _isAscending = true;
+                  sortProvider.setSortOrder(true);
                 } else {
-                  _isAscending = false;
+                  sortProvider.setSortOrder(false);
                 }
               });
             },
@@ -77,11 +61,11 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             onSelected: (SortOptions sortValue) {
               setState(() {
                 if (sortValue == SortOptions.price) {
-                  _isSortedByPrice = true;
-                  _isSortedByName = false;
+                  sortProvider.setSortBy(SortOptions.price);
+                  sortProvider.setSortOrder(false);
                 } else {
-                  _isSortedByName = true;
-                  _isSortedByPrice = false;
+                  sortProvider.setSortOrder(true);
+                  sortProvider.setSortBy(SortOptions.name);
                 }
               });
             },
@@ -104,18 +88,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             ],
             onSelected: (FilterOptions selectedValue) {
               setState(() {
-                if (selectedValue == FilterOptions.favorite) {
-                  _showFavoriteOnly = true;
-                  _showIgnoredOnly = false;
-                } 
-                else if (selectedValue == FilterOptions.ignored) {
-                  _showIgnoredOnly = true;
-                  _showFavoriteOnly = false;
-                }
-                else {
-                  _showFavoriteOnly = false;
-                  _showIgnoredOnly = false;
-                }
+                sortProvider.setFilter(selectedValue);
               });
             },
           ),
@@ -133,7 +106,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly, _showIgnoredOnly, _isSortedByPrice, _isSortedByName, _isAscending),
+      body: ProductGrid(),
       drawer: const AppDrawer(),
     );
   }
