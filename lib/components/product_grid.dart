@@ -11,7 +11,7 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ProductList>(context, listen: true);
+    final provider = Provider.of<ProductList>(context);
     List<Product> loadedProducts;
     if (showIgnoredOnly) {
       loadedProducts = provider.ignoredItems;

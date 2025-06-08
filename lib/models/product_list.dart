@@ -5,7 +5,18 @@ import 'package:shop/models/product.dart';
 class ProductList with ChangeNotifier {
   final List<Product> _items = dummyProducts;
 
-  List<Product> get items => [..._items];
+  
+  ProductList() {
+    for (final product in _items) {
+      product.addListener(_onProductChanged);
+    }
+  }
+
+  void _onProductChanged() {
+    notifyListeners();
+  }
+
+  List<Product> get items => _items.where((prod) => !prod.isIgnored).toList();
   List<Product> get favoriteItems => _items.where((prod) => prod.isFavorite == true).toList();
   List<Product> get ignoredItems => _items.where((prod) => prod.isIgnored == true).toList();
 
