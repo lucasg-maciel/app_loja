@@ -8,8 +8,8 @@ class ProductItem extends StatelessWidget {
   const ProductItem({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context, listen: false);
+  Widget build(BuildContext context) {  
+    final product = Provider.of<Product>(context, listen: true);
     final cart = Provider.of<Cart>(context, listen: false);
 
     return ClipRRect(
@@ -19,8 +19,10 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black12,
           leading: Consumer<Product>(
             builder: (ctx, product, _) => IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.block, color: Colors.black),
+              onPressed: () {
+                product.toggleIgnore();
+              },
+              icon: Icon(product.isIgnored ? Icons.check : Icons.block, color: Colors.redAccent),
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),

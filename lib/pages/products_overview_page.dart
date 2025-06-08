@@ -9,6 +9,8 @@ import 'package:shop/utils/app_routes.dart';
 enum FilterOptions {
   favorite,
   all,
+  ignored,
+
 }
 
 class ProductsOverviewPage extends StatefulWidget {
@@ -20,7 +22,7 @@ class ProductsOverviewPage extends StatefulWidget {
 
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
-
+  bool _showIgnoredOnly = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,13 +40,24 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
                 value: FilterOptions.all,
                 child: Text('Todos'),
               ),
+              const PopupMenuItem(
+                value: FilterOptions.ignored,
+                child: Text('Produtos Ignorados'),
+              ),
             ],
             onSelected: (FilterOptions selectedValue) {
               setState(() {
                 if (selectedValue == FilterOptions.favorite) {
                   _showFavoriteOnly = true;
-                } else {
+                  _showIgnoredOnly = false;
+                } 
+                else if (selectedValue == FilterOptions.ignored) {
+                  _showIgnoredOnly = true;
                   _showFavoriteOnly = false;
+                }
+                else {
+                  _showFavoriteOnly = false;
+                  _showIgnoredOnly = false;
                 }
               });
             },
@@ -63,7 +76,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly),
+      body: ProductGrid(_showFavoriteOnly, _showIgnoredOnly),
       drawer: const AppDrawer(),
     );
   }
