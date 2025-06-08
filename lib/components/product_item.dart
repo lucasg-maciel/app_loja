@@ -39,9 +39,17 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
-          title: Text(
-            product.name,
-            textAlign: TextAlign.center,
+          title: Column(
+            children: [
+              Text(
+                product.name,
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                'R\$ ${product.price.toStringAsFixed(2)}',
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
           trailing: IconButton(
             onPressed: () {

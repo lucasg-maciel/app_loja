@@ -7,7 +7,11 @@ import 'package:shop/models/product_list.dart';
 class ProductGrid extends StatelessWidget {
   final bool showFavoriteOnly;
   final bool showIgnoredOnly;
-  const ProductGrid(this.showFavoriteOnly, this.showIgnoredOnly, {Key? key}) : super(key: key);
+  final bool isSortedByPrice;
+  final bool isSortedByName;
+  final bool isAscending;
+
+  const ProductGrid(this.showFavoriteOnly, this.showIgnoredOnly, this.isSortedByPrice, this.isSortedByName, this.isAscending, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +23,22 @@ class ProductGrid extends StatelessWidget {
       loadedProducts = provider.favoriteItems;
     } else {
       loadedProducts = provider.items;
+    }
+    
+    if(isSortedByName){
+      if(isAscending){
+        loadedProducts.sort((a, b) => a.name.compareTo(b.name));
+      } else {
+        loadedProducts.sort((a, b) => b.name.compareTo(a.name));
+      }
+    }
+
+    if(isSortedByPrice){
+      if(isAscending){
+        loadedProducts.sort((a, b) => a.price.compareTo(b.price));
+      } else {
+        loadedProducts.sort((a, b) => b.price.compareTo(a.price));
+      }
     }
 
     return GridView.builder(

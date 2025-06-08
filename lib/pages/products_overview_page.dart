@@ -13,6 +13,13 @@ enum FilterOptions {
 
 }
 
+enum SortOptions {
+  price,
+  name,
+  ascending,
+  descending,
+}
+
 class ProductsOverviewPage extends StatefulWidget {
   const ProductsOverviewPage({Key? key}) : super(key: key);
 
@@ -23,12 +30,62 @@ class ProductsOverviewPage extends StatefulWidget {
 class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
   bool _showFavoriteOnly = false;
   bool _showIgnoredOnly = false;
+  bool _isAscending = true;
+  bool _isSortedByPrice = false;
+  bool _isSortedByName = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Minha Loja'),
         actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.arrow_drop_down_circle_outlined),
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: SortOptions.ascending,
+                child: Text('Ordenação Ascendente'),
+              ),
+              const PopupMenuItem(
+                value: SortOptions.descending,
+                child: Text('Ordenação Descendente'),
+              ),
+            ],
+            onSelected: (SortOptions selectedValue) {
+              setState(() {
+                if (selectedValue == SortOptions.ascending) {
+                  _isAscending = true;
+                } else {
+                  _isAscending = false;
+                }
+              });
+            },
+          ),
+          PopupMenuButton(
+            icon: const Icon(Icons.sort),
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: SortOptions.price,
+                child: Text('Ordenar por Preço'),
+              ),
+              const PopupMenuItem(
+                value: SortOptions.name,
+                child: Text('Ordenar por Nome'),
+              ),
+            ],
+            onSelected: (SortOptions sortValue) {
+              setState(() {
+                if (sortValue == SortOptions.price) {
+                  _isSortedByPrice = true;
+                  _isSortedByName = false;
+                } else {
+                  _isSortedByName = true;
+                  _isSortedByPrice = false;
+                }
+              });
+            },
+          ),
           PopupMenuButton(
             icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => [
@@ -76,7 +133,7 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
           ),
         ],
       ),
-      body: ProductGrid(_showFavoriteOnly, _showIgnoredOnly),
+      body: ProductGrid(_showFavoriteOnly, _showIgnoredOnly, _isSortedByPrice, _isSortedByName, _isAscending),
       drawer: const AppDrawer(),
     );
   }
