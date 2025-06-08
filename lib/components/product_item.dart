@@ -15,6 +15,16 @@ class ProductItem extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
+        header: GridTileBar(
+          backgroundColor: Colors.black12,
+          leading: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.block, color: Colors.black),
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+          ),
+        ),
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           leading: Consumer<Product>(
